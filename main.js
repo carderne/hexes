@@ -6,7 +6,7 @@ mapboxgl.accessToken =
   "pk.eyJ1IjoiY2FyZGVybmUiLCJhIjoiY2puMXN5cnBtNG53NDN2bnhlZ3h4b3RqcCJ9.eNjrtezXwvM7Ho1VSxo06w";
 const map = new mapboxgl.Map({
   container: "map",
-  style: "mapbox://styles/mapbox/streets-v11",
+  style: "mapbox://styles/mapbox/outdoors-v11",
   center: [-1.238, 51.741],
   zoom: 13,
   minZoom: 13,
@@ -116,4 +116,8 @@ map.on("load", () => {
   map.on("moveend", () => {
     map.getSource("hex").setData(getHexes());
   });
+});
+
+document.getElementById("print").addEventListener("click", () => {
+  console.log(chosen);
 });

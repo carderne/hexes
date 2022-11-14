@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>shexy</title>
+        <title>hexes</title>
         <script src="vendor/mapbox-gl.js"></script>
         <script src="vendor/h3-js.js"></script>
         <link href="vendor/mapbox-gl.css" rel="stylesheet" />
@@ -12,5 +12,8 @@
     <body>
         <div class="h-screen w-screen" id="map"></div>
         <script type="module" src="./main.js"></script>
+        <div class="absolute top-4 left-4 bg-white p-4">
+            <button id="print" class="button" type="button" onclick="print">Log IDs to console</button>
+        </div>
     </body>
 </html>
