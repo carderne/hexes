@@ -9,7 +9,7 @@ const map = new mapboxgl.Map({
   style: "mapbox://styles/mapbox/streets-v11",
   center: [-1.238, 51.741],
   zoom: 13,
-  minZoom:13,
+  minZoom: 13,
   maxZoom: 17,
   //hash: "loc",
 });
@@ -18,7 +18,7 @@ const h3Level = 10;
 const chosen = seen;
 
 const getHexes = () => {
-  const {_sw, _ne} = map.getBounds();
+  const { _sw, _ne } = map.getBounds();
   const win = [
     [_sw.lng, _sw.lat],
     [_sw.lng, _ne.lat],
@@ -29,17 +29,15 @@ const getHexes = () => {
   const hexs = h3.polyfill(win, h3Level, true);
   const fc = {
     type: "FeatureCollection",
-    features: hexs.map((h, i) => (
-      {
-        type: "Feature",
-        id: i,
-        properties: {index: h},
-        geometry: {
-          type: "Polygon",
-          coordinates: [h3.h3ToGeoBoundary(h, true)],
-        }
-      }
-    ))
+    features: hexs.map((h, i) => ({
+      type: "Feature",
+      id: i,
+      properties: { index: h },
+      geometry: {
+        type: "Polygon",
+        coordinates: [h3.h3ToGeoBoundary(h, true)],
+      },
+    })),
   };
   return fc;
 };
@@ -47,28 +45,22 @@ const getHexes = () => {
 const hoverColor = "hsla(300, 50%, 50%, 0.6)";
 const chosenColor = "hsla(0, 50%, 50%, 0.3)";
 
-const hexColor = (c) => (
+const hexColor = (c) => [
+  "case",
+  ["in", ["get", "index"], ["literal", c]],
   [
     "case",
-    [
-      "in",
-      ["get", "index"],
-      ["literal", c]
-    ],
-    [
-      'case',
-      ['boolean', ['feature-state', 'hover'], false],
-      hoverColor,
-      chosenColor,
-    ],
-    [
-      'case',
-      ['boolean', ['feature-state', 'hover'], false],
-      hoverColor,
-      "hsla(0, 0%, 0%, 0)"
-    ]
-  ]
-);
+    ["boolean", ["feature-state", "hover"], false],
+    hoverColor,
+    chosenColor,
+  ],
+  [
+    "case",
+    ["boolean", ["feature-state", "hover"], false],
+    hoverColor,
+    "hsla(0, 0%, 0%, 0)",
+  ],
+];
 
 map.on("load", () => {
   map.addSource("hex", {
@@ -81,35 +73,35 @@ map.on("load", () => {
     type: "fill",
     source: "hex",
     paint: {
-      'fill-color': hexColor(chosen),
-      'fill-outline-color': 'rgba(0,0,0,0)',
-    }
+      "fill-color": hexColor(chosen),
+      "fill-outline-color": "rgba(0,0,0,0)",
+    },
   });
 
   let hoveredStateId = null;
-  map.on('mousemove', 'hex', (e) => {
+  map.on("mousemove", "hex", (e) => {
     if (e.features.length > 0) {
       if (hoveredStateId !== null) {
         map.setFeatureState(
-          { source: 'hex', id: hoveredStateId },
+          { source: "hex", id: hoveredStateId },
           { hover: false }
         );
       }
       hoveredStateId = e.features[0].id;
       map.setFeatureState(
-        { source: 'hex', id: hoveredStateId },
+        { source: "hex", id: hoveredStateId },
         { hover: true }
       );
     }
   });
 
-  map.on("mouseenter", "hex", () => map.getCanvas().style.cursor = "pointer");
+  map.on("mouseenter", "hex", () => (map.getCanvas().style.cursor = "pointer"));
 
-  map.on('mouseleave', 'hex', () => {
+  map.on("mouseleave", "hex", () => {
     map.getCanvas().style.cursor = "";
     if (hoveredStateId !== null) {
       map.setFeatureState(
-        { source: 'hex', id: hoveredStateId },
+        { source: "hex", id: hoveredStateId },
         { hover: false }
       );
     }
